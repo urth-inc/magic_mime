@@ -34,7 +34,7 @@ defmodule MagicMime.TestHelpers do
 
   def with_permission_denied_file(content, fun) do
     # Create a temporary directory with no access permissions
-    base_dir = "/tmp/test_perm_#{:rand.uniform(100000)}"
+    base_dir = "/tmp/test_perm_#{:rand.uniform(100_000)}"
     File.mkdir_p!(base_dir)
 
     temp_file = Path.join(base_dir, "inaccessible_file.txt")
@@ -48,12 +48,16 @@ defmodule MagicMime.TestHelpers do
       case File.stat(temp_file) do
         {:error, :eacces} ->
           fun.(temp_file)
+
         {:error, :enoent} ->
-          fun.(temp_file)  # In some environments, it may appear as non-existent
+          # In some environments, it may appear as non-existent
+          fun.(temp_file)
+
         {:ok, _} ->
           # If still accessible, fallback to file-level chmod
           File.chmod!(base_dir, 0o755)
           File.chmod!(temp_file, 0o000)
+
           try do
             fun.(temp_file)
           after
