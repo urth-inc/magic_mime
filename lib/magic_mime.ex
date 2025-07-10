@@ -32,7 +32,7 @@ defmodule MagicMime do
 
   @type path :: Path.t()
   @type mime_type :: String.t()
-  @type error_reason :: atom() | {atom(), term()} | {atom(), term(), term()}
+  @type error_reason :: atom() | {atom(), term()} | {atom(), term(), term()} | Exception.t()
 
   @doc """
   Detects the MIME type of a file.
@@ -130,9 +130,6 @@ defmodule MagicMime do
 
       {:error, %struct{} = exception} when struct in [RuntimeError, ArgumentError, ErlangError] ->
         raise exception
-
-      {:error, reason} ->
-        raise Error, {:unknown, "Unknown error: #{inspect(reason)}"}
     end
   end
 
