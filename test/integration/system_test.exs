@@ -20,15 +20,9 @@ defmodule MagicMime.Integration.SystemTest do
     end
 
     test "handles permission denied errors" do
-      with_temp_file("test", fn temp_file ->
-        File.chmod!(temp_file, 0o000)
-
-        try do
-          # Should specifically return :eacces when permission is denied
-          assert {:error, :eacces} = MagicMime.detect(temp_file)
-        after
-          File.chmod!(temp_file, 0o644)
-        end
+      with_permission_denied_file("test", fn temp_file ->
+        # Should specifically return :eacces when permission is denied
+        assert {:error, :eacces} = MagicMime.detect(temp_file)
       end)
     end
 
@@ -61,16 +55,10 @@ defmodule MagicMime.Integration.SystemTest do
     end
 
     test "raises Error for permission denied" do
-      with_temp_file("test", fn temp_file ->
-        File.chmod!(temp_file, 0o000)
-
-        try do
-          # Should specifically raise Error with permission denied message
-          assert_raise Error, ~r/Permission denied/, fn ->
-            MagicMime.detect!(temp_file)
-          end
-        after
-          File.chmod!(temp_file, 0o644)
+      with_permission_denied_file("test", fn temp_file ->
+        # Should specifically raise Error with permission denied message
+        assert_raise Error, ~r/Permission denied/, fn ->
+          MagicMime.detect!(temp_file)
         end
       end)
     end
@@ -78,16 +66,10 @@ defmodule MagicMime.Integration.SystemTest do
 
   describe "MagicMime.detect/2 error categorization" do
     test "consistently categorizes permission denied errors" do
-      with_temp_file("permission test", fn temp_file ->
-        File.chmod!(temp_file, 0o000)
-
-        try do
-          # Test multiple attempts to ensure consistency
-          for _i <- 1..3 do
-            assert {:error, :eacces} = MagicMime.detect(temp_file)
-          end
-        after
-          File.chmod!(temp_file, 0o644)
+      with_permission_denied_file("permission test", fn temp_file ->
+        # Test multiple attempts to ensure consistency
+        for _i <- 1..3 do
+          assert {:error, :eacces} = MagicMime.detect(temp_file)
         end
       end)
     end

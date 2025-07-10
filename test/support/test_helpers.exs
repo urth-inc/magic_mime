@@ -32,6 +32,41 @@ defmodule MagicMime.TestHelpers do
     end
   end
 
+  def with_permission_denied_file(content, fun) do
+    # Create a temporary directory with no access permissions
+    base_dir = "/tmp/test_perm_#{:rand.uniform(100000)}"
+    File.mkdir_p!(base_dir)
+
+    temp_file = Path.join(base_dir, "inaccessible_file.txt")
+    File.write!(temp_file, content)
+
+    # Remove all permissions from the directory, making the file inaccessible
+    File.chmod!(base_dir, 0o000)
+
+    try do
+      # Verify that the file is actually inaccessible
+      case File.stat(temp_file) do
+        {:error, :eacces} ->
+          fun.(temp_file)
+        {:error, :enoent} ->
+          fun.(temp_file)  # In some environments, it may appear as non-existent
+        {:ok, _} ->
+          # If still accessible, fallback to file-level chmod
+          File.chmod!(base_dir, 0o755)
+          File.chmod!(temp_file, 0o000)
+          try do
+            fun.(temp_file)
+          after
+            File.chmod!(temp_file, 0o644)
+          end
+      end
+    after
+      # Restore permissions for cleanup
+      File.chmod!(base_dir, 0o755)
+      File.rm_rf(base_dir)
+    end
+  end
+
   def with_path_manipulation(new_path, fun) do
     original_path = System.get_env("PATH")
 
