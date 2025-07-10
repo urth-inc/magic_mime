@@ -1,0 +1,7 @@
+{
+  "minimum_coverage": 76,
+  "skip_files": [
+    "test/",
+    "deps/"
+  ]
+} 
