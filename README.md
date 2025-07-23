@@ -1,10 +1,11 @@
 # MagicMime
 
-[![CI](https://github.com/urth-inc/magic_mime/workflows/CI/badge.svg)](https://github.com/urth-inc/magic_mime/actions)
-[![Coverage Status](https://coveralls.io/repos/github/urth-inc/magic_mime/badge.svg?branch=main)](https://coveralls.io/github/urth-inc/magic_mime?branch=main)
+[![CI](https://github.com/urth-inc/magic_mime/workflows/Test/badge.svg)](https://github.com/urth-inc/magic_mime/actions)
+[![Coverage Status](https://coveralls.io/repos/github/urth-inc/magic_mime/badge.svg?branch=develop)](https://coveralls.io/github/urth-inc/magic_mime?branch=develop)
 [![Hex.pm](https://img.shields.io/hexpm/v/magic_mime.svg)](https://hex.pm/packages/magic_mime)
 [![Documentation](https://img.shields.io/badge/docs-hexpm-blue.svg)](https://hexdocs.pm/magic_mime)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![GitHub](https://img.shields.io/badge/github-urth--inc%2Fmagic__mime-blue.svg)](https://github.com/urth-inc/magic_mime)
 
 Elixir wrapper for MIME type detection using the system's file command.
 
